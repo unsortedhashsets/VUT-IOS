@@ -13,13 +13,15 @@ POUŽITÍ
 VOLBY
 • PRÍKAZ muže být jeden z:
 
-  – list-ip – výpis seznamu zdrojových IP adres.
+	– list-ip – výpis seznamu zdrojových IP adres.
 	– list-hosts – výpis seznamu zdrojových doménových jmen.
 	– list-uri – výpis seznamu cílových zdroju (URI).
 	– hist-ip – výpis histogramu cetností dotazu podle zdrojových IP adres.
 	– hist-load – výpis histogramu záteže (tj. poctu dotazu ve jednotlivých casových intervalech).
 
 • FILTR muže být kombinace následujících:
+
+
 	– -a DATETIME – after = jsou uvažovány pouze záznamy PO tomto datu (bez tohoto data). DATETIME je formátu YYYY-MM-DD HH:MM:SS.
 	– -b DATETIME – before, jsou uvažovány pouze záznamy PRED tímto datem (bez tohodo data).
 	– -ip IPADDR – jsou uvažovány pouze záznamy odpovídající požadavkum ze zdrojové adresy IPADDR. Formát IPADDR odpovídá IPv4 nebo IPv6.
@@ -50,6 +52,7 @@ je dán casovým rozsahem vstupních nebo filtrovaných záznamu.
 9. URI je identifikátor, který se v záznamu nachází za identifikátorem metody protokolu HTTP, viz RFC2616, Sec. 9.
 
 PODROBNÉ POŽADAVKY
+
 	1. Skript analyzuje záznamy (logy) pouze ze zadaných souboru.
 	2. Skript žádný soubor nemodifikuje. Skript nepoužívá docasné soubory.
 	3. IP adresa muže být IPv4 (napr. 147.229.176.19), IPv6 standardního
@@ -60,17 +63,19 @@ PODROBNÉ POŽADAVKY
 	6. Doménové jméno podle IP adresy zjistete pomocí príkazu host. Pokud nelze doménové jméno získat, bude místo nej použita IP adresa.
 
 NÁVRATOVÁ HODNOTA
+
 	• Skript vrací úspech v prípade úspešné operace. Interní chyba skriptu nebo chybné argumenty budou doprovázeny chybovým hlášením a neúspešným návratovým kódem.
 
 Implementacní detaily
+
 	• Skript by mel mít v celém behu nastaveno POSIXLY_CORRECT=yes.
 	• Skript by mel bežet na všech bežných shellech (dash, ksh, bash). Mužete použít GNU rozšírení pro sed ci awk. Jazyk Perl nebo Python povolen není.
-	• Skript musí bežet na bežne dostupných OS GNU/Linux, BSD a MacOS. Studentum je k dispozici virtuální stroj s obrazem ke stažení zde: http://www.fit.vutbr.cz/~lengal/public/trusty.ova (pro VirtualBox, login: trusty
-/ heslo: trusty), na kterém lze overit správnou funkcnost projektu.
+	• Skript musí bežet na bežne dostupných OS GNU/Linux, BSD a MacOS. Studentum je k dispozici virtuální stroj s obrazem ke stažení zde: http://www.fit.vutbr.cz/~lengal/public/trusty.ova (pro VirtualBox, login: trusty / heslo: trusty), na kterém lze overit správnou funkcnost projektu.
 	• Skript nesmí používat docasné soubory. Povoleny jsou docasné soubory neprímo tvorené príkazem sed (napr. argument sed -i). Príklady použití
 	• Ukázky záznamu webového serveru jsou dostupné zde: https://pajda.fit.vutbr.cz/ios/ios-19-1-logs
 
 Príklady:
+
 	$ ./wana list-ip ios-example.com.access.log
 	147.229.13.201
 	198.27.69.191
@@ -94,7 +99,13 @@ Príklady:
 	$ ./wana -a "2019-02-22 09:00" -b "2019-02-22 09:44:54" ios-example.com.access.log
 	147.229.13.201 - - [22/Feb/2019:09:24:33 +0100] "-" 408 3275 "-" "-"
 	147.229.13.201 - - [22/Feb/2019:09:24:33 +0100] "-" 408 3275 "-" "-"
-	198.27.69.191 - - [22/Feb/2019:09:43:13 +0100] "GET / HTTP/1.1" 200 22311 "-" "Mozilla/5.0 (198.27.69.191 - - [22/Feb/2019:09:43:24 +0100] "GET / HTTP/1.1" 200 22313 "-" "Mozilla/5.0 (198.27.69.191 - - [22/Feb/2019:09:43:42 +0100] "GET /?gf_page=upload HTTP/1.1" 200 22304 "-" 198.27.69.191 - - [22/Feb/2019:09:44:07 +0100] "GET / HTTP/1.1" 200 22313 "-" "Mozilla/5.0 (198.27.69.191 - - [22/Feb/2019:09:44:37 +0100] "GET /?up_auto_log=true HTTP/1.1" 200 22315 "-" $ ./wana -a "2019-02-22 09:00" -b "2019-02-22 09:44:54" list-uri ios-example.com.access.log
+	198.27.69.191 - - [22/Feb/2019:09:43:13 +0100] "GET / HTTP/1.1" 200 22311 "-" "Mozilla/5.0 (
+	198.27.69.191 - - [22/Feb/2019:09:43:24 +0100] "GET / HTTP/1.1" 200 22313 "-" "Mozilla/5.0 (
+	198.27.69.191 - - [22/Feb/2019:09:43:42 +0100] "GET /?gf_page=upload HTTP/1.1" 200 22304 "-" 
+	198.27.69.191 - - [22/Feb/2019:09:44:07 +0100] "GET / HTTP/1.1" 200 22313 "-" "Mozilla/5.0 (
+	198.27.69.191 - - [22/Feb/2019:09:44:37 +0100] "GET /?up_auto_log=true HTTP/1.1" 200 22315 "-"
+	
+	$ ./wana -a "2019-02-22 09:00" -b "2019-02-22 09:44:54" list-uri ios-example.com.access.log
 	/
 	/?gf_page=upload
 	/?up_auto_log=true
